@@ -154,7 +154,7 @@ Mais contexto: [docs/decisoes.md](docs/decisoes.md).
 
 ## Nota de dependência
 
-O `npm audit --omit=dev` sinaliza uma vulnerabilidade moderada (GHSA-hp3w-g68c-fv3c) em `sprintf-js`, dependência transitiva do driver SQL Server `mssql` via `tedious`. Na verificação atual, a faixa afetada inclui a última versão disponível do `sprintf-js` (`1.1.3`), e o npm só oferece correção automática rebaixando `mssql` para `4.2.0`, uma quebra incompatível com a aplicação. Não forcei esse downgrade. Reavalie o advisory e atualize a cadeia de dependências quando os mantenedores publicarem uma versão corrigida compatível.
+O `npm audit --omit=dev` sinaliza uma vulnerabilidade moderada (GHSA-hp3w-g68c-fv3c) em `sprintf-js`, dependência transitiva do driver SQL Server `mssql` via `tedious`. Na verificação atual, a faixa afetada inclui a última versão disponível do `sprintf-js` (`1.1.3`), e o npm só oferece correção automática rebaixando `mssql` para `4.2.0`, uma quebra incompatível com a aplicação. Não forcei esse downgrade. A suíte usa Jest 30, atualização que remove os alertas altos encontrados na versão anterior; o audit completo ainda aponta alertas moderados nas árvores transitivas de produção e de testes por dependerem de versões afetadas do mesmo pacote. Reavalie o advisory e atualize as cadeias quando os mantenedores publicarem versões corrigidas compatíveis.
 
 ## Melhorias futuras
 
