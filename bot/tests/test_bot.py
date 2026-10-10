@@ -161,3 +161,42 @@ def test_executar_segue_apos_falha_e_registra_resumo():
     assert resultado["falhas"] == 1
     assert resultado["inseridos"] == 0
     assert len(repo.logs) == 3
+
+
+def test_falha_no_alerta_nao_desfaz_chamado_inserido():
+    registro = {
+        "origem": "email",
+        "texto": "Servidor fora do ar",
+        "hash_texto": calcular_hash("Servidor fora do ar"),
+    }
+
+    class Coletor:
+        def coletar(self):
+            return iter([registro])
+
+    class Classificador:
+        def classificar(self, texto):
+            return {"categoria": "Suporte Técnico", "urgencia": "alta", "resumo": texto}
+
+    class Repositorio:
+        logs = []
+        inseridos = 0
+
+        def registrar_log(self, *args):
+            self.logs.append(args)
+
+        def existe_hash(self, hash_texto):
+            return False
+
+        def inserir(self, ticket, classificacao):
+            self.inseridos += 1
+
+    class Notificador:
+        def enviar(self, ticket, classificacao):
+            raise RuntimeError("webhook indisponível")
+
+    repo = Repositorio()
+    resultado = executar(Coletor(), Classificador(), repo, Notificador())
+    assert resultado["inseridos"] == 1
+    assert resultado["falhas"] == 1
+    assert any("Falha ao enviar alerta" in log[2] for log in repo.logs)

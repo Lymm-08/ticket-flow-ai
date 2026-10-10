@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 from .classificador_ia import ClassificadorIA
 from .coletor import criar_coletor
+from .notificador import criar_notificador
 from .repositorio import RepositorioChamados
 
 
@@ -33,8 +34,6 @@ def executar(
                 classificacao = classificador.classificar(registro["texto"])
                 repositorio.inserir(registro, classificacao)
                 resumo["inseridos"] += 1
-                if classificacao["urgencia"] == "alta" and notificador:
-                    notificador.enviar(registro, classificacao)
             except Exception as erro:
                 resumo["falhas"] += 1
                 repositorio.registrar_log(
@@ -42,6 +41,18 @@ def executar(
                     "ERROR",
                     f"Falha ao processar chamado (hash={registro['hash_texto']}): {erro}",
                 )
+                continue
+
+            if classificacao["urgencia"] == "alta" and notificador:
+                try:
+                    notificador.enviar(registro, classificacao)
+                except Exception as erro:
+                    resumo["falhas"] += 1
+                    repositorio.registrar_log(
+                        execucao_id,
+                        "ERROR",
+                        f"Falha ao enviar alerta (hash={registro['hash_texto']}): {erro}",
+                    )
     except Exception as erro:
         repositorio.registrar_log(execucao_id, "ERROR", f"Falha ao coletar fonte: {erro}")
         raise
@@ -55,7 +66,7 @@ def main() -> None:
     load_dotenv()
     intervalo = int(os.getenv("BOT_INTERVAL_SECONDS", "0"))
     while True:
-        executar()
+        executar(notificador=criar_notificador())
         if intervalo <= 0:
             break
         time.sleep(intervalo)
