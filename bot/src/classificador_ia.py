@@ -129,7 +129,14 @@ class ClassificadorIA:
         normalizado = texto.casefold()
         urgencia = "media"
         if any(palavra in normalizado for palavra in (
-            "urgente", "imediatamente", "hoje", "parada", "fora do ar", "bloqueado"
+            "urgente", "imediatamente", "hoje", "parada", "fora do ar", "bloqueado",
+            "não consigo acessar", "nao consigo acessar", "não liga", "nao liga",
+            "aguardando atendimento", "erro de conexão", "erro ao emitir",
+            "não recebi", "nao recebi", "não caiu", "nao caiu",
+            "não estão chegando", "nao estao chegando", "não consigo concluir",
+            "nao consigo concluir", "desconto de horas", "destinatário incorreto",
+            "destinatario incorreto", "impedindo o fechamento",
+            "cartão corporativo perdido", "cartao corporativo perdido",
         )):
             urgencia = "alta"
         elif any(palavra in normalizado for palavra in (

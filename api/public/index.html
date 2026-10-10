@@ -22,33 +22,39 @@
         <div>
           <p class="eyebrow">OPERAÇÃO</p>
           <h1>Central de chamados</h1>
-          <p class="subtitle">Acompanhe solicitações, prioridades e andamento em um só lugar.</p>
+          <p class="subtitle">Da entrada à resolução: acompanhe cada etapa do atendimento.</p>
         </div>
-        <button id="refresh-button" class="button button-secondary" type="button">Atualizar agora</button>
+        <button id="refresh-button" class="button button-secondary" type="button">
+          <span aria-hidden="true">↻</span> Atualizar agora
+        </button>
       </section>
 
       <p id="notice" class="notice" role="status" aria-live="polite"></p>
 
       <section class="metrics-grid" aria-label="Resumo dos chamados">
         <article class="metric-card">
+          <span class="metric-icon metric-icon-new" aria-hidden="true">✦</span>
           <span class="metric-label">Novos</span>
           <strong id="metric-new" class="metric-value">—</strong>
-          <span class="metric-foot">Aguardando atendimento</span>
+          <span class="metric-foot">Aguardando início do atendimento</span>
         </article>
         <article class="metric-card">
+          <span class="metric-icon metric-icon-progress" aria-hidden="true">◷</span>
           <span class="metric-label">Em andamento</span>
           <strong id="metric-progress" class="metric-value">—</strong>
-          <span class="metric-foot">Em tratamento</span>
+          <span class="metric-foot">Em tratamento pela equipe</span>
         </article>
         <article class="metric-card">
+          <span class="metric-icon metric-icon-resolved" aria-hidden="true">✓</span>
           <span class="metric-label">Resolvidos</span>
           <strong id="metric-resolved" class="metric-value">—</strong>
-          <span class="metric-foot">Concluídos</span>
+          <span class="metric-foot">Atendimentos concluídos</span>
         </article>
         <article class="metric-card metric-card-urgent">
+          <span class="metric-icon metric-icon-urgent" aria-hidden="true">!</span>
           <span class="metric-label">Urgentes em aberto</span>
           <strong id="metric-urgent" class="metric-value">—</strong>
-          <span class="metric-foot">Prioridade alta</span>
+          <span class="metric-foot">Alta prioridade, ainda não resolvidos</span>
         </article>
       </section>
 
@@ -57,7 +63,7 @@
           <div class="panel-heading">
             <div>
               <h2>Chamados por categoria</h2>
-              <p>Distribuição de todas as solicitações</p>
+              <p>Volume de solicitações em cada área</p>
             </div>
           </div>
           <div class="chart-wrap">
@@ -69,7 +75,7 @@
           <div class="panel-heading">
             <div>
               <h2>Visão geral</h2>
-              <p>Indicadores de atendimento</p>
+              <p>Eficiência da operação</p>
             </div>
           </div>
           <div class="average-metric">
@@ -86,7 +92,8 @@
       <section class="panel tickets-panel">
         <div class="panel-heading tickets-heading">
           <div>
-            <h2>Chamados</h2>
+            <p class="eyebrow">ACOMPANHAMENTO</p>
+            <h2>Fila de atendimento</h2>
             <p id="results-count">Carregando solicitações…</p>
           </div>
           <div class="filters" aria-label="Filtros de chamados">
@@ -121,6 +128,21 @@
           </div>
         </div>
 
+        <nav class="status-tabs" aria-label="Filtrar fila por etapa">
+          <button class="status-tab is-active" type="button" data-status="" aria-pressed="true">
+            Todos <span id="count-all">—</span>
+          </button>
+          <button class="status-tab" type="button" data-status="novo" aria-pressed="false">
+            Novos <span id="count-new">—</span>
+          </button>
+          <button class="status-tab" type="button" data-status="em_andamento" aria-pressed="false">
+            Em andamento <span id="count-progress">—</span>
+          </button>
+          <button class="status-tab" type="button" data-status="resolvido" aria-pressed="false">
+            Resolvidos <span id="count-resolved">—</span>
+          </button>
+        </nav>
+
         <div class="table-scroll">
           <table>
             <thead>
@@ -130,7 +152,7 @@
                 <th scope="col">Urgência</th>
                 <th scope="col">Status</th>
                 <th scope="col">Recebido em</th>
-                <th scope="col"><span class="visually-hidden">Ação</span></th>
+                <th scope="col"><span class="visually-hidden">Próxima etapa</span></th>
               </tr>
             </thead>
             <tbody id="tickets-body">

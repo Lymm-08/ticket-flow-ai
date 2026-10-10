@@ -47,10 +47,15 @@ function formatDuration(seconds) {
 
 function renderMetrics(metrics) {
   const statusTotals = Object.fromEntries(metrics.por_status.map((row) => [row.status, Number(row.total)]));
+  const total = Object.values(statusTotals).reduce((sum, count) => sum + count, 0);
   document.querySelector("#metric-new").textContent = statusTotals.novo || 0;
   document.querySelector("#metric-progress").textContent = statusTotals.em_andamento || 0;
   document.querySelector("#metric-resolved").textContent = statusTotals.resolvido || 0;
   document.querySelector("#metric-urgent").textContent = metrics.urgentes_abertos || 0;
+  document.querySelector("#count-all").textContent = total;
+  document.querySelector("#count-new").textContent = statusTotals.novo || 0;
+  document.querySelector("#count-progress").textContent = statusTotals.em_andamento || 0;
+  document.querySelector("#count-resolved").textContent = statusTotals.resolvido || 0;
   document.querySelector("#metric-average-time").textContent =
     formatDuration(metrics.tempo_medio_resolucao_segundos);
 
@@ -183,15 +188,28 @@ function renderTickets(result) {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "button button-primary table-action";
-      button.textContent = next === "resolvido" ? "Resolver" : "Iniciar";
+      button.textContent = next === "resolvido" ? "Marcar resolvido" : "Iniciar";
+      button.setAttribute("aria-label", `${button.textContent}: chamado ${ticket.id}`);
       button.addEventListener("click", () => updateStatus(ticket.id, next, button));
       actionCell.append(button);
     } else {
       actionCell.textContent = "—";
     }
+
     row.append(summary, category, urgency, status, created, actionCell);
     elements.table.append(row);
   }
+}
+
+function selectStatus(status) {
+  elements.status.value = status;
+  currentPage = 1;
+  for (const tab of document.querySelectorAll(".status-tab")) {
+    const selected = tab.dataset.status === status;
+    tab.classList.toggle("is-active", selected);
+    tab.setAttribute("aria-pressed", String(selected));
+  }
+  loadDashboard();
 }
 
 async function loadMetrics() {
@@ -242,8 +260,12 @@ function scheduleRefresh() {
   loadDashboard();
 }
 
-for (const filter of [elements.status, elements.urgency, elements.category]) {
+for (const filter of [elements.urgency, elements.category]) {
   filter.addEventListener("change", scheduleRefresh);
+}
+elements.status.addEventListener("change", () => selectStatus(elements.status.value));
+for (const tab of document.querySelectorAll(".status-tab")) {
+  tab.addEventListener("click", () => selectStatus(tab.dataset.status));
 }
 elements.search.addEventListener("input", () => {
   window.clearTimeout(searchTimer);

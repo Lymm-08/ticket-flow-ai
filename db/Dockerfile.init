@@ -3,5 +3,7 @@ FROM mcr.microsoft.com/mssql/server:2022-latest
 COPY init.sh /scripts/init.sh
 COPY 01_schema.sql /scripts/01_schema.sql
 COPY 02_seed.sql /scripts/02_seed.sql
+COPY 03_demo_status.sql /scripts/03_demo_status.sql
+COPY demo-status.sh /scripts/demo-status.sh
 
 ENTRYPOINT ["/bin/bash", "/scripts/init.sh"]

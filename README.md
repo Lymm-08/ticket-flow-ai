@@ -17,6 +17,14 @@ flowchart LR
 
 O diagrama detalhado está em [docs/diagrama-fluxo.md](docs/diagrama-fluxo.md).
 
+## Prévia do painel
+
+Capturas da demonstração com chamados de exemplo, filas por status e solicitações prioritárias:
+
+![Visão geral do painel de chamados](docs/screenshots/painel-visao-geral.png)
+
+![Fila de chamados de alta prioridade](docs/screenshots/fila-alta-prioridade.png)
+
 ## Stack
 
 - **Robô:** Python 3.10+, requests, pyodbc, python-dotenv e pytest.
@@ -53,7 +61,9 @@ Os passos abaixo são para qualquer pessoa que clone o repositório e queira exe
    docker compose up --build -d
    ```
 
-Após a primeira inicialização, abra <http://localhost:3000>. O SQL Server precisa baixar a imagem e inicializar o banco, então a primeira execução pode levar alguns minutos. O robô importa os 50 chamados de exemplo uma vez e termina; a API e o banco ficam ativos.
+Após a primeira inicialização, abra <http://localhost:3000>. O SQL Server precisa baixar a imagem e inicializar o banco, então a primeira execução pode levar alguns minutos. O robô importa os 50 chamados de exemplo uma vez e termina; uma etapa demonstrativa prepara os status com histórico e distribui as datas em dias úteis e horários de expediente recentes. A API e o banco ficam ativos.
+
+No painel, as abas **Novos**, **Em andamento** e **Resolvidos** abrem as filas correspondentes. Em cada chamado, use **Iniciar** para movê-lo para a fila em andamento e **Marcar resolvido** para concluir o atendimento. Os filtros de status, urgência, categoria e texto podem ser combinados.
 
 Para conferir o estado dos serviços, execute `docker compose ps`. Para acompanhar os logs, execute `docker compose logs -f`. Para encerrar os containers, execute `docker compose down`; os dados permanecem no volume `sqlserver-data`. `docker compose down -v` também apaga o banco local persistido.
 

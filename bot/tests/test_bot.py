@@ -69,6 +69,12 @@ def test_mock_classifica_por_palavras_chave():
         "urgencia": "alta",
         "resumo": "O sistema está fora do ar hoje",
     }
+    assert classificador.classificar(
+        "O computador da recepção não liga e há pacientes aguardando atendimento"
+    )["urgencia"] == "alta"
+    assert classificador.classificar(
+        "Meu pagamento veio com desconto de horas que trabalhei normalmente"
+    )["urgencia"] == "alta"
     assert classificador.classificar("Qual o prazo das férias")["categoria"] == "RH"
 
 

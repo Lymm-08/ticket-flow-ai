@@ -23,6 +23,8 @@ describe('API de chamados', () => {
     const response = await request(testApp(serviceMock())).get('/');
     expect(response.status).toBe(200);
     expect(response.text).toContain('Central de chamados');
+    expect(response.text).toContain('data-status="em_andamento"');
+    expect(response.text).toContain('data-status="resolvido"');
   });
 
   test('health confirma a API e o banco', async () => {

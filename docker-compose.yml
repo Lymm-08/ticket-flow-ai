@@ -83,5 +83,19 @@ services:
         condition: service_completed_successfully
     restart: "no"
 
+  demo-status:
+    build:
+      context: ./db
+      dockerfile: Dockerfile.init
+    env_file: .env
+    environment:
+      DB_NAME: ${DB_NAME:-CentralAutomacao}
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?Defina MSSQL_SA_PASSWORD no arquivo .env}
+    entrypoint: ["/bin/bash", "/scripts/demo-status.sh"]
+    depends_on:
+      bot:
+        condition: service_completed_successfully
+    restart: "no"
+
 volumes:
   sqlserver-data:
