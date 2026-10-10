@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Painel de acompanhamento e triagem de chamados automatizados.">
+    <title>Central de Automação de Chamados</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Central de Automação, início">
+        <span class="brand-mark" aria-hidden="true">CA</span>
+        <span>Central de Automação</span>
+      </a>
+      <span class="live-indicator"><span aria-hidden="true"></span> Atualização automática</span>
+    </header>
+
+    <main class="container">
+      <section class="page-heading">
+        <div>
+          <p class="eyebrow">OPERAÇÃO</p>
+          <h1>Central de chamados</h1>
+          <p class="subtitle">Acompanhe solicitações, prioridades e andamento em um só lugar.</p>
+        </div>
+        <button id="refresh-button" class="button button-secondary" type="button">Atualizar agora</button>
+      </section>
+
+      <p id="notice" class="notice" role="status" aria-live="polite"></p>
+
+      <section class="metrics-grid" aria-label="Resumo dos chamados">
+        <article class="metric-card">
+          <span class="metric-label">Novos</span>
+          <strong id="metric-new" class="metric-value">—</strong>
+          <span class="metric-foot">Aguardando atendimento</span>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Em andamento</span>
+          <strong id="metric-progress" class="metric-value">—</strong>
+          <span class="metric-foot">Em tratamento</span>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Resolvidos</span>
+          <strong id="metric-resolved" class="metric-value">—</strong>
+          <span class="metric-foot">Concluídos</span>
+        </article>
+        <article class="metric-card metric-card-urgent">
+          <span class="metric-label">Urgentes em aberto</span>
+          <strong id="metric-urgent" class="metric-value">—</strong>
+          <span class="metric-foot">Prioridade alta</span>
+        </article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel chart-panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Chamados por categoria</h2>
+              <p>Distribuição de todas as solicitações</p>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="category-chart" role="img" aria-label="Gráfico de chamados por categoria"></canvas>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Visão geral</h2>
+              <p>Indicadores de atendimento</p>
+            </div>
+          </div>
+          <div class="average-metric">
+            <span class="average-icon" aria-hidden="true">◷</span>
+            <div>
+              <span class="metric-label">Tempo médio até resolução</span>
+              <strong id="metric-average-time">—</strong>
+              <span class="metric-foot">Considera chamados resolvidos</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel tickets-panel">
+        <div class="panel-heading tickets-heading">
+          <div>
+            <h2>Chamados</h2>
+            <p id="results-count">Carregando solicitações…</p>
+          </div>
+          <div class="filters" aria-label="Filtros de chamados">
+            <label>
+              <span>Status</span>
+              <select id="filter-status">
+                <option value="">Todos</option>
+                <option value="novo">Novo</option>
+                <option value="em_andamento">Em andamento</option>
+                <option value="resolvido">Resolvido</option>
+              </select>
+            </label>
+            <label>
+              <span>Urgência</span>
+              <select id="filter-urgency">
+                <option value="">Todas</option>
+                <option value="alta">Alta</option>
+                <option value="media">Média</option>
+                <option value="baixa">Baixa</option>
+              </select>
+            </label>
+            <label>
+              <span>Categoria</span>
+              <select id="filter-category">
+                <option value="">Todas</option>
+              </select>
+            </label>
+            <label class="search-field">
+              <span>Buscar</span>
+              <input id="filter-search" type="search" maxlength="200" placeholder="Texto do chamado">
+            </label>
+          </div>
+        </div>
+
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Solicitação</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Urgência</th>
+                <th scope="col">Status</th>
+                <th scope="col">Recebido em</th>
+                <th scope="col"><span class="visually-hidden">Ação</span></th>
+              </tr>
+            </thead>
+            <tbody id="tickets-body">
+              <tr><td class="empty-state" colspan="6">Carregando chamados…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span id="page-label">Página 1</span>
+          <div class="pagination">
+            <button id="previous-page" class="button button-secondary" type="button" disabled>Anterior</button>
+            <button id="next-page" class="button button-secondary" type="button" disabled>Próxima</button>
+          </div>
+        </div>
+      </section>
+      <footer class="footer">Central de Automação de Chamados com IA</footer>
+    </main>
+  </body>
+</html>

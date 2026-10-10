@@ -19,6 +19,12 @@ function testApp(service) {
 }
 
 describe('API de chamados', () => {
+  test('serve o painel estático na raiz', async () => {
+    const response = await request(testApp(serviceMock())).get('/');
+    expect(response.status).toBe(200);
+    expect(response.text).toContain('Central de chamados');
+  });
+
   test('health confirma a API e o banco', async () => {
     const response = await request(testApp(serviceMock())).get('/health');
     expect(response.status).toBe(200);
