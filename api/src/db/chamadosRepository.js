@@ -50,7 +50,8 @@ async function list({ status, urgencia, categoria, busca, page, limit, sort, ord
 }
 
 async function findById(id) {
-  const result = await query(
+  const pool = await getPool();
+  const result = await pool.request().input('id', sql.BigInt, id).query(
     `SELECT ch.id, ch.origem, ch.texto, ch.resumo, ch.urgencia, ch.status, ch.criado_em, ch.atualizado_em, c.nome AS categoria
      FROM dbo.chamados ch
      JOIN dbo.categorias c ON c.id = ch.categoria_id
@@ -66,7 +67,10 @@ async function findById(id) {
 }
 
 async function getStatus(id) {
-  const result = await query('SELECT status FROM dbo.chamados WHERE id = @id', { id });
+  const pool = await getPool();
+  const result = await pool.request()
+    .input('id', sql.BigInt, id)
+    .query('SELECT status FROM dbo.chamados WHERE id = @id');
   return result.recordset[0]?.status || null;
 }
 
