@@ -1,5 +1,7 @@
 # Central de Automação de Chamados com IA
 
+[Read this README in English](README.en.md).
+
 Projeto de portfólio para automatizar a triagem de solicitações recebidas por e-mail, planilha ou formulário. Um robô Python importa chamados de CSV, classifica categoria e urgência, grava os dados no SQL Server e notifica a equipe sobre itens urgentes. A API Node.js oferece consulta e atualização de chamados; um painel web simples apresenta métricas e fila de atendimento.
 
 ## Fluxo
