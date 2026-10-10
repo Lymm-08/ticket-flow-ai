@@ -46,7 +46,7 @@ function createApp({ service = createChamadosService(repository), logger = conso
     validate(z.object({ limit: z.coerce.number().int().min(1).max(100).default(20) }), 'query', 'validatedQuery'),
     asyncHandler(controller.logs)
   );
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static(path.join(__dirname, '..', 'public')));
   app.use((req, res) => res.status(404).json({ erro: 'Rota não encontrada', detalhes: [] }));
   app.use((error, req, res, next) => {
     const status = Number.isInteger(error.status) ? error.status : 500;
