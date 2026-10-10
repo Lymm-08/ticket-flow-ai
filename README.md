@@ -19,7 +19,9 @@ O diagrama detalhado está em [docs/diagrama-fluxo.md](docs/diagrama-fluxo.md).
 
 ## Prévia do painel
 
-Capturas da demonstração com a fila completa, filtros em funcionamento e solicitações prioritárias:
+Capturas da demonstração com a tela de controle, a fila completa, filtros em funcionamento e solicitações prioritárias:
+
+![Tela de controle com métricas e chamados por categoria](docs/screenshots/painel-controle.png)
 
 ![Fila de atendimento com todos os chamados e controles de filtro](docs/screenshots/painel-visao-geral.png)
 
