@@ -182,14 +182,15 @@ O `npm audit --omit=dev` sinaliza uma vulnerabilidade moderada (GHSA-hp3w-g68c-f
 - Implantar em nuvem com segredos gerenciados, observabilidade e alertas operacionais.
 - Registrar feedback humano para medir e melhorar a qualidade das classificações.
 
-## Métricas reais
+## Resultados da demonstração local
 
-Preencha esta seção com medições obtidas em execuções reais; os dados abaixo não são resultados de produção.
+Valores consultados na execução local em 10/10/2026. A demonstração usa 50 solicitações fictícias do CSV; o script de dados de demonstração distribui os status e gera um histórico simulado. Portanto, estes números demonstram o funcionamento do sistema e não representam operação de produção nem um benchmark.
 
-| Indicador | Medição |
-|---|---|
-| Chamados processados | A preencher |
-| Tempo médio de execução | A preencher |
-| Precisão da classificação (avaliada manualmente) | A preencher |
-| Duplicados evitados | A preencher |
-| Alertas urgentes entregues | A preencher |
+| Indicador | Resultado |
+|---|---:|
+| Chamados carregados | 50 |
+| Novos / em andamento / resolvidos | 17 / 16 / 17 |
+| Urgência alta | 15 (11 ainda abertos) |
+| Tempo médio até a resolução | 4 h 30 min (histórico simulado) |
+
+O tempo de execução do robô e a precisão da classificação não foram medidos. A precisão requer um conjunto de chamados rotulados para comparação, e o tempo depende do ambiente. Alertas externos também não são contabilizados nesta demonstração, pois o webhook fica desativado por padrão.
