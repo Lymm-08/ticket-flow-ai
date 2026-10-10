@@ -1,0 +1,87 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?Defina MSSQL_SA_PASSWORD no arquivo .env}
+    ports:
+      - "${DB_PORT:-1433}:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -C -b -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+    restart: unless-stopped
+
+  db-init:
+    build:
+      context: ./db
+      dockerfile: Dockerfile.init
+    env_file: .env
+    environment:
+      DB_NAME: ${DB_NAME:-CentralAutomacao}
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?Defina MSSQL_SA_PASSWORD no arquivo .env}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      PORT: "3000"
+      DB_HOST: db
+      DB_PORT: "1433"
+      DB_NAME: ${DB_NAME:-CentralAutomacao}
+      DB_USER: ${DB_USER:-sa}
+      DB_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no arquivo .env}
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+    ports:
+      - "${PORT:-3000}:3000"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/health').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+  bot:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      SOURCE_TYPE: ${SOURCE_TYPE:-csv}
+      CSV_PATH: /app/data/exemplo_chamados.csv
+      CLASSIFIER_MODE: ${CLASSIFIER_MODE:-mock}
+      DB_HOST: db
+      DB_PORT: "1433"
+      DB_NAME: ${DB_NAME:-CentralAutomacao}
+      DB_USER: ${DB_USER:-sa}
+      DB_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no arquivo .env}
+    volumes:
+      - ./data:/app/data:ro
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    restart: "no"
+
+volumes:
+  sqlserver-data:
