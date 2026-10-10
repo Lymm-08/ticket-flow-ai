@@ -27,32 +27,35 @@ O diagrama detalhado está em [docs/diagrama-fluxo.md](docs/diagrama-fluxo.md).
 - **Execução:** Docker Compose.
 - **CI:** GitHub Actions testa Python e Node.js em pushes e pull requests.
 
-## Rodar com Docker
+## Executar o projeto
 
 Pré-requisitos: Docker Desktop com Compose v2 e espaço em disco para a imagem do SQL Server.
 
-1. Crie o arquivo local de configuração:
+Os passos abaixo são para qualquer pessoa que clone o repositório e queira executar a demonstração local com Docker Compose.
+
+1. Na raiz do repositório, crie uma cópia local da configuração de exemplo:
+
+   ```sh
+   cp .env.example .env
+   ```
+
+   No Windows PowerShell, o comando equivalente é:
 
    ```powershell
    Copy-Item .env.example .env
    ```
 
-2. Abra o arquivo para preencher os valores locais:
+2. Edite `.env` em um editor de texto e troque `ChangeThis_StrongPassword123!` por uma senha forte escolhida para o ambiente local, tanto em `MSSQL_SA_PASSWORD` quanto em `DB_PASSWORD`. Os dois valores precisam ser iguais. Mantenha `CLASSIFIER_MODE=mock`; não é necessária chave Anthropic para a demonstração.
+
+3. Inicie os serviços em segundo plano:
 
    ```powershell
-   notepad .env
+   docker compose up --build -d
    ```
 
-   Substitua `MSSQL_SA_PASSWORD` por uma senha forte e coloque a **mesma senha** em `DB_PASSWORD`. Deixe `CLASSIFIER_MODE=mock`.
-3. Na raiz do repositório, inicie o sistema:
+Após a primeira inicialização, abra <http://localhost:3000>. O SQL Server precisa baixar a imagem e inicializar o banco, então a primeira execução pode levar alguns minutos. O robô importa os 50 chamados de exemplo uma vez e termina; a API e o banco ficam ativos.
 
-   ```powershell
-   docker compose up --build
-   ```
-
-Abra <http://localhost:3000>. A primeira inicialização pode levar alguns minutos enquanto o SQL Server baixa a imagem, inicia o banco e o robô importa os 50 chamados de exemplo. O robô executa uma vez e termina; a API e o banco continuam ativos.
-
-Para encerrar os containers, use `Ctrl+C` e depois `docker compose down`. Os dados permanecem no volume `sqlserver-data`. Para apagar também o banco persistido, use `docker compose down -v` — isso remove os dados do projeto.
+Para conferir o estado dos serviços, execute `docker compose ps`. Para acompanhar os logs, execute `docker compose logs -f`. Para encerrar os containers, execute `docker compose down`; os dados permanecem no volume `sqlserver-data`. `docker compose down -v` também apaga o banco local persistido.
 
 ## Configuração
 
